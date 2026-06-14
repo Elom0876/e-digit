@@ -4,78 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-digit — Connexion</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#5b8ef0">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:"Segoe UI",sans-serif;background:#030712;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+        .wrap{width:100%;max-width:420px}
+        .logo{text-align:center;margin-bottom:32px}
+        .logo a{font-size:1.8rem;font-weight:800;color:#60a5fa;text-decoration:none}
+        .logo p{color:#6b7280;margin-top:6px;font-size:0.875rem}
+        .card{background:#111827;border:1px solid #1f2937;border-radius:16px;padding:32px}
+        .form{display:flex;flex-direction:column;gap:20px}
+        .field label{display:block;font-size:0.75rem;font-weight:600;color:#9ca3af;margin-bottom:8px;letter-spacing:0.05em}
+        .field input{width:100%;background:#030712;border:1px solid #374151;border-radius:10px;padding:12px 16px;color:#fff;font-size:0.9rem;outline:none;transition:border-color 0.2s}
+        .field input:focus{border-color:#3b82f6}
+        .field input::placeholder{color:#4b5563}
+        .field-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .field-header label{font-size:0.75rem;font-weight:600;color:#9ca3af;letter-spacing:0.05em}
+        .field-header a{font-size:0.75rem;color:#60a5fa;text-decoration:none}
+        .field-header a:hover{color:#93c5fd}
+        .remember{display:flex;align-items:center;gap:10px;color:#9ca3af;font-size:0.875rem}
+        .remember input{width:16px;height:16px}
+        .error{color:#f87171;font-size:0.75rem;margin-top:4px}
+        .success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:12px 16px;color:#34d399;font-size:0.875rem;margin-bottom:16px}
+        .btn{width:100%;background:#2563eb;color:#fff;font-weight:700;padding:14px;border:none;border-radius:10px;font-size:1rem;cursor:pointer;transition:background 0.2s}
+        .btn:hover{background:#1d4ed8}
+        .footer{text-align:center;margin-top:20px;color:#6b7280;font-size:0.875rem}
+        .footer a{color:#60a5fa;text-decoration:none}
+        .footer a:hover{color:#93c5fd}
+        .back{text-align:center;margin-top:12px}
+        .back a{color:#4b5563;font-size:0.75rem;text-decoration:none}
+        .back a:hover{color:#9ca3af}
+    </style>
 </head>
-<body class="bg-gray-950 text-white font-sans min-h-screen flex items-center justify-center px-4">
-
-    <div class="w-full max-w-md">
-
-        <div class="text-center mb-8">
-            <a href="{{ route('home') }}" class="text-3xl font-bold text-blue-400">E-digit</a>
-            <p class="text-gray-500 mt-2 text-sm">Connectez-vous à votre espace</p>
+<body>
+    <div class="wrap">
+        <div class="logo">
+            <a href="{{ route('home') }}">E-digit</a>
+            <p>Connectez-vous à votre espace</p>
         </div>
 
-        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8">
-
+        <div class="card">
             @if(session('status'))
-                <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4 mb-6">
-                    <p class="text-green-400 text-sm">{{ session('status') }}</p>
-                </div>
+                <div class="success">{{ session('status') }}</div>
             @endif
 
-            <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-5">
+            <form method="POST" action="{{ route('login') }}" class="form">
                 @csrf
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-400 mb-2">EMAIL</label>
-                    <input type="email" name="email" value="{{ old('email') }}" required autofocus
-                           class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition"
-                           placeholder="votre@email.com">
-                    @error('email')
-                        <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                <div class="field">
+                    <label>EMAIL</label>
+                    <input type="email" name="email" value="{{ old('email') }}" required autofocus placeholder="votre@email.com">
+                    @error('email')<p class="error">{{ $message }}</p>@enderror
                 </div>
 
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="text-sm font-semibold text-gray-400">MOT DE PASSE</label>
+                <div class="field">
+                    <div class="field-header">
+                        <label>MOT DE PASSE</label>
                         @if(Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-blue-400 text-xs hover:text-blue-300 transition">
-                                Mot de passe oublié ?
-                            </a>
+                            <a href="{{ route('password.request') }}">Mot de passe oublié ?</a>
                         @endif
                     </div>
-                    <input type="password" name="password" required
-                           class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition"
-                           placeholder="••••••••">
-                    @error('password')
-                        <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                    <input type="password" name="password" required placeholder="••••••••">
+                    @error('password')<p class="error">{{ $message }}</p>@enderror
                 </div>
 
-                <div class="flex items-center gap-3">
-                    <input type="checkbox" name="remember" id="remember"
-                           class="w-4 h-4 rounded border-gray-700 bg-gray-950 text-blue-500">
-                    <label for="remember" class="text-sm text-gray-400">Se souvenir de moi</label>
+                <div class="remember">
+                    <input type="checkbox" name="remember" id="remember">
+                    <label for="remember">Se souvenir de moi</label>
                 </div>
 
-                <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition">
-                    Se connecter →
-                </button>
+                <button type="submit" class="btn">Se connecter →</button>
             </form>
         </div>
 
-        <p class="text-center text-gray-500 text-sm mt-6">
-            Pas encore de compte ?
-            <a href="{{ route('register') }}" class="text-blue-400 hover:text-blue-300 transition">Créer un compte</a>
+        <p class="footer">
+            Pas encore de compte ? <a href="{{ route('register') }}">Créer un compte</a>
         </p>
-        <p class="text-center mt-4">
-            <a href="{{ route('home') }}" class="text-gray-600 hover:text-gray-400 text-xs transition">← Retour à l'accueil</a>
-        </p>
+        <div class="back">
+            <a href="{{ route('home') }}">← Retour à l'accueil</a>
+        </div>
     </div>
-
 </body>
 </html>
